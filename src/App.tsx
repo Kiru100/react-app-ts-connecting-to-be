@@ -1,21 +1,25 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import axios from "axios";
 
-const connect = () => console.log("connecting");
-const disconnect = () => console.log("disconnecting");
-
+interface User{
+	id:number,
+	name: string
+}
 
 function App() {
+	const [users, setUsers] = useState<User[]>([]);
+	
 	useEffect(()=>{
-		connect();
-		
-		return ()=> disconnect();
-	});
+		axios.get<User[]>("https://jsonplaceholder.typicode.com/users")
+		.then(res=>setUsers(res.data)) 
+	
+	},[]);
 
 	return (
-		<div>
-			
-		</div>
+		<ul>
+			{users.map(user => <li key={user.id}>{user.name}</li>)}
+		</ul>
 	)
 }
 
