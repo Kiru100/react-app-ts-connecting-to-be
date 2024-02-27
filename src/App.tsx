@@ -1,6 +1,6 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useEffect, useState } from 'react';
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 
 interface User{
 	id:number,
@@ -9,17 +9,36 @@ interface User{
 
 function App() {
 	const [users, setUsers] = useState<User[]>([]);
+	const [error, setError] = useState("");
 	
 	useEffect(()=>{
-		axios.get<User[]>("https://jsonplaceholder.typicode.com/users")
-		.then(res=>setUsers(res.data)) 
+		/* Get -> promise -> res / err */
+
+		try{
+			const fetchUsers = async () => {
+				const res = await axios.get<User[]>("https://jsonplaceholder.typicode.com/users")
+				setUsers(res.data);
+			}
+		}
+		catch(err){
+			setError((err as AxiosError).message);
+		}
+			
+
+	
+		// axios.get<User[]>("https://jsonplaceholder.typicode.com/usdrs")
+		//  	.then(res=>setUsers(res.data))
+		// 	.catch(err =>setError(err.message)) 
 	
 	},[]);
 
 	return (
-		<ul>
-			{users.map(user => <li key={user.id}>{user.name}</li>)}
-		</ul>
+		<div className="m-5">
+			{error && <p className="text-danger">{error}</p>}
+			<ul>
+				{users.map(user => <li key={user.id}>{user.name}</li>)}
+			</ul>
+		</div>
 	)
 }
 
