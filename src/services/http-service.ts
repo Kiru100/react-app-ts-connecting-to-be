@@ -23,11 +23,11 @@ class HttpService{
         return apiClient.delete(this.endpoint+ "/" + id);
     }
 
-    addUser<T>(entity: T){
+    create<T>(entity: T){
         return apiClient.post(this.endpoint, entity);
     }
 
-    updateUser<T extends Entity>(entity: T){
+    update<T extends Entity>(entity: T){
         return apiClient.patch(this.endpoint+ "/" + entity.id, entity)
     }
 }
