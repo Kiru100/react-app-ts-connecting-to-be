@@ -35,11 +35,9 @@ function App() {
 
 		setUsers(users.filter(user_object=> user_object.id !== user.id));
 
-		const {request, cancel}  = userService.deleteUser(user);
-
-
-		request
-			.catch(err => {
+		userService
+			.deleteUser(user.id)
+			.catch((err) => {
 				setError(err.message);
 				setUsers(originalUsers);
 			})
@@ -50,12 +48,13 @@ function App() {
 		const newUser = {id: 0, name: "Mosh"};
 		setUsers([newUser,...users]);
 
-		apiClient.post("/users/", newUser)
-		.then(({data: savedUsers}) => setUsers([savedUsers, ...users]))
-		.catch(err =>{
-			setError(err.message);
-			setUsers(originalUsers);
-		})
+		userService
+			.addUser(newUser)
+			.then(({data: savedUsers}) => setUsers([savedUsers, ...users]))
+			.catch(err =>{
+				setError(err.message);
+				setUsers(originalUsers);
+			})
 	}
 
 	const updateUser = (user: User) =>{
@@ -64,11 +63,12 @@ function App() {
 
 		setUsers(users.map(u => u.id === user.id ? updatedUser : u));
 
-		apiClient.patch("/users/" + user.id, updatedUser)
-		.catch(err =>{
-			setError(err.message);
-			setUsers(originalUsers);
-		});
+		userService
+			.updateUser(updatedUser)
+			.catch(err =>{
+				setError(err.message);
+				setUsers(originalUsers);
+			});
 	}
 
 	return (

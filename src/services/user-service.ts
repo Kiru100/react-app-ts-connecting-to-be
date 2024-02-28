@@ -12,10 +12,16 @@ class UserService{
         return { request, cancel: ()=> controller.abort()}
     }
 
-    deleteUser(user: User){
-        const controller = new AbortController();
-        const request =  apiClient.delete("/users/" + user.id);
-        return { request, cancel: ()=> controller.abort()}
+    deleteUser(id: number){
+        return apiClient.delete("/users/" + id);
+    }
+
+    addUser(new_user: object){
+        return apiClient.post("/users/", new_user);
+    }
+
+    updateUser(updated_user: User){
+        return apiClient.patch("/users/" + updated_user.id, updated_user)
     }
 }
 
